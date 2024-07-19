@@ -16,6 +16,8 @@ public class ServerWindow extends JFrame {
     private final JTextArea log = new JTextArea();
     private final JPanel btnPanel = new JPanel();
     private boolean isServerWorking;
+    private String msgStart = "Server started\n";
+    private String msgStop = "Server stoped\n";
 
     public ServerWindow(){
         isServerWorking = false;
@@ -23,7 +25,8 @@ public class ServerWindow extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 isServerWorking = false;
-                System.out.println("Server stoped " + isServerWorking + "\n");
+                //System.out.println("Server stoped " + isServerWorking + "\n");
+                log.append(msgStop);
             }
         });
 
@@ -31,7 +34,8 @@ public class ServerWindow extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 isServerWorking = true;
-                System.out.println("Server started " + isServerWorking + "\n");
+                //System.out.println("Server started " + isServerWorking + "\n");
+                log.append(msgStart);
             }
         });
         setDefaultCloseOperation(EXIT_ON_CLOSE);
