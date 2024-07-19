@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 
 public class ServerWindow extends JFrame {
     private static final int POS_X = 500;
-    private static final int POS_Y = 550;
+    private static final int POS_Y = 300;
     private static final int WIDTH = 400;
     private static final int HEIGHT = 300;
 
