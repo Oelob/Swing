@@ -14,6 +14,7 @@ public class ServerWindow extends JFrame {
     private final JButton btnStart = new JButton("Start");
     private final JButton btnStop = new JButton("Stop");
     private final JTextArea log = new JTextArea();
+    private final JPanel btnPanel = new JPanel();
     private boolean isServerWorking;
 
     public ServerWindow(){
@@ -38,10 +39,22 @@ public class ServerWindow extends JFrame {
         setBounds(POS_X, POS_Y, WIDTH, HEIGHT);
         setTitle("Chat server");
         setAlwaysOnTop(true);
-        setLayout(new GridLayout(1,2));
-        add(btnStart);
-        add(btnStop);
+//        setLayout(new GridLayout(1,2));
+//        add(btnStart);
+//        add(btnStop);
+
+        // добавление панели с кнопками внизу окна
+        btnPanel.add(btnStart);
+        btnPanel.add(btnStop);
+        add(btnPanel, BorderLayout.SOUTH);
+
+        // добавление панели с текстом
+        add(log);
+        log.setEditable(false);//запрет изменений зоны текста
+
 
         setVisible(true);
     }
+
+
 }
