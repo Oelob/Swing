@@ -25,7 +25,7 @@ public class ClientGUI extends JFrame {
 
     ClientGUI(String ip, String port, String login, String password){
 
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+//        setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(WIDTH,HEIGHT);
         setResizable(true);
         setLocationRelativeTo(null);
@@ -59,5 +59,6 @@ public class ClientGUI extends JFrame {
         setVisible(true);
 
     }
+
 
 }

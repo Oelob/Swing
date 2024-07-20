@@ -18,24 +18,34 @@ public class ServerWindow extends JFrame {
     private boolean isServerWorking;
     private String msgStart = "Server started\n";
     private String msgStop = "Server stoped\n";
+    private String msgServerWorking = "Server already working\n";
+    private String msgServerNotWorking = "Server isn't running\n";
 
     public ServerWindow(){
         isServerWorking = false;
         btnStop.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                isServerWorking = false;
-                //System.out.println("Server stoped " + isServerWorking + "\n");
-                log.append(msgStop);
+                if (isServerWorking == false) {
+                    log.append(msgServerNotWorking);
+                } else {
+                    isServerWorking = false;
+                    //System.out.println("Server stoped " + isServerWorking + "\n");
+                    log.append(msgStop);
+                }
             }
         });
 
         btnStart.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (isServerWorking == true){
+                    log.append(msgServerWorking);
+                } else {
                 isServerWorking = true;
                 //System.out.println("Server started " + isServerWorking + "\n");
                 log.append(msgStart);
+                }
             }
         });
         setDefaultCloseOperation(EXIT_ON_CLOSE);
