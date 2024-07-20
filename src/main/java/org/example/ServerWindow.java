@@ -13,9 +13,9 @@ public class ServerWindow extends JFrame {
 
     private final JButton btnStart = new JButton("Start");
     private final JButton btnStop = new JButton("Stop");
-    private final JTextArea log = new JTextArea();
+    public static final JTextArea log = new JTextArea();
     private final JPanel btnPanel = new JPanel();
-    private boolean isServerWorking;
+    public static boolean isServerWorking;
     private String msgStart = "Server started\n";
     private String msgStop = "Server stoped\n";
     private String msgServerWorking = "Server already working\n";
@@ -65,6 +65,7 @@ public class ServerWindow extends JFrame {
         // добавление панели с текстом
         add(log);
         log.setEditable(false);//запрет изменений зоны текста
+
 
 
         setVisible(true);

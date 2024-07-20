@@ -2,6 +2,8 @@ package org.example;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class ClientGUI extends JFrame {
 
@@ -12,7 +14,7 @@ public class ClientGUI extends JFrame {
 //    String login;
 //    int password;
 
-    private final JTextArea log = new JTextArea();
+    public static final JTextArea logClient = new JTextArea();
     private final JPanel topPanel = new JPanel(new GridLayout(2,3));
     private final JTextField tflogin = new JTextField();
     private final JTextField tfIPadress = new JTextField();
@@ -22,6 +24,7 @@ public class ClientGUI extends JFrame {
     private final JButton btnSend = new JButton("Send");
     private final JButton btnLogin = new JButton("Login");
     private final JPanel panelMessage = new JPanel(new BorderLayout());
+    public static boolean isLogged;
 
     ClientGUI(String ip, String port, String login, String password){
 
@@ -51,10 +54,48 @@ public class ClientGUI extends JFrame {
         add(panelMessage, BorderLayout.SOUTH);
 
         // добавление текстовой зоны
-        add(log);
-        log.setEditable(false);
-        JScrollPane scrollog = new JScrollPane(log);
+        add(logClient);
+        logClient.setEditable(false);
+        JScrollPane scrollog = new JScrollPane(logClient);
         add(scrollog);
+
+        // Подключение к серверу
+        btnLogin.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+//                ServerWindow.log.append("User " + login + " has logged\n");// org/example/Вопросы:2
+                if (ServerWindow.isServerWorking == true) {
+                    isLogged = true;
+                    Controller.userLog(login);
+                } else {
+                    Controller.errorMsg();
+                }
+            }
+        });
+
+        // отправка сообщений нажатием Enter
+        tfmessage.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (ServerWindow.isServerWorking == true) {
+                    Controller.sendTxt(tfmessage.getText());
+                } else {
+                    Controller.errorMsg();
+                }
+            }
+        });
+
+        // отправка сообщений кнопкой Send
+        btnSend.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (ServerWindow.isServerWorking == true) {
+                    Controller.sendTxt(tfmessage.getText());
+                } else {
+                    Controller.errorMsg();
+                }
+            }
+        });
 
         setVisible(true);
 
