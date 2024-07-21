@@ -6,8 +6,10 @@ import javax.swing.event.CaretListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
-public class ServerWindow extends JFrame {
+public class ServerWindow extends JFrame implements Observable {
     private static final int POS_X = 500;
     private static final int POS_Y = 300;
     private static final int WIDTH = 400;
@@ -22,8 +24,12 @@ public class ServerWindow extends JFrame {
     private String msgStop = "Server stoped\n";
     private String msgServerWorking = "Server already working\n";
     private String msgServerNotWorking = "Server isn't running\n";
+    public static String msgFromClient;
+    private static List<ClientGUI> clients;
 
     public ServerWindow(){
+        clients = new ArrayList<>();
+
         isServerWorking = false;
         btnStop.addActionListener(new ActionListener() {
             @Override
@@ -68,17 +74,27 @@ public class ServerWindow extends JFrame {
         add(log);
         log.setEditable(false);//запрет изменений зоны текста
 
-//        log.addCaretListener(new CaretListener() {
-//            @Override
-//            public void caretUpdate(CaretEvent e) {
-//
-//                ClientGUI.logClient.append(log.getText());
-//            }
-//        });
-
-
         setVisible(true);
     }
 
+    public static void sendMessage (){
+
+        for (ClientGUI o : clients) {
+//            o.update(msgFromClient);
+
+            o.logClient.append(msgFromClient);
+            System.out.println(o.getLogin());
+        }
+    }
+
+    @Override
+    public void registerClient(ClientGUI o) {
+        clients.add(o);
+    }
+
+    @Override
+    public void removeClient(ClientGUI o) {
+        clients.remove(o);
+    }
 
 }

@@ -5,7 +5,8 @@ public class Controller {
     public static void sendTxt (String text, String login){
         if (ClientGUI.isLogged == true) {// проверка на подключение к серверу
             ServerWindow.log.append(login + ": " + text + "\n");
-            ClientGUI.logClient.append(login + ": " + text + "\n");
+            ServerWindow.msgFromClient = login + ": " + text + "\n";
+            ServerWindow.sendMessage();
         } else {
             ClientGUI.logClient.append("You need to login!\n");
         }
