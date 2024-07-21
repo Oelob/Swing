@@ -105,9 +105,7 @@ public class ClientGUI extends JFrame implements Observer{
 
     }
 
-    public String getLogin() {
-        return login;
-    }
+
 
     @Override
     public void update(String message) {
