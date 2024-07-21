@@ -1,6 +1,8 @@
 package org.example;
 
 import javax.swing.*;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -66,6 +68,13 @@ public class ServerWindow extends JFrame {
         add(log);
         log.setEditable(false);//запрет изменений зоны текста
 
+//        log.addCaretListener(new CaretListener() {
+//            @Override
+//            public void caretUpdate(CaretEvent e) {
+//
+//                ClientGUI.logClient.append(log.getText());
+//            }
+//        });
 
 
         setVisible(true);

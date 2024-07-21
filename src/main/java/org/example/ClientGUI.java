@@ -26,6 +26,7 @@ public class ClientGUI extends JFrame {
     private final JPanel panelMessage = new JPanel(new BorderLayout());
     public static boolean isLogged;
 
+    // коструктор с возможностью внесения параметров при создании
     ClientGUI(String ip, String port, String login, String password){
 
 //        setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -78,7 +79,7 @@ public class ClientGUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (ServerWindow.isServerWorking == true) {
-                    Controller.sendTxt(tfmessage.getText());
+                    Controller.sendTxt(tfmessage.getText(), login);
                 } else {
                     Controller.errorMsg();
                 }
@@ -90,7 +91,7 @@ public class ClientGUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (ServerWindow.isServerWorking == true) {
-                    Controller.sendTxt(tfmessage.getText());
+                    Controller.sendTxt(tfmessage.getText(), login);
                 } else {
                     Controller.errorMsg();
                 }
@@ -100,6 +101,79 @@ public class ClientGUI extends JFrame {
         setVisible(true);
 
     }
+    // конструктор как на слайдах
+    ClientGUI(ServerWindow serverWindow){
 
+//        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setSize(WIDTH,HEIGHT);
+        setResizable(true);
+        setLocationRelativeTo(null);
+        setTitle("Chat client");
 
+        // добавление верхней панели с текстовыми полями
+        tfIPadress.setText("123.33.2.4");
+        tfPort.setText("2323");
+        tflogin.setText("Ivan");
+        tfPassword.setText("46453");
+
+        topPanel.add(tfIPadress);
+        topPanel.add(tfPort);
+        topPanel.add(tflogin);
+        topPanel.add(tfPassword);
+        topPanel.add(btnLogin);
+        add(topPanel, BorderLayout.NORTH);
+
+        // добавление нижней панели с текстовым полем и кнопкой отправки сообщения
+        tfmessage.setColumns(350);
+        panelMessage.add(tfmessage, BorderLayout.CENTER);
+        panelMessage.add(btnSend, BorderLayout.EAST);
+        add(panelMessage, BorderLayout.SOUTH);
+
+        // добавление текстовой зоны
+        add(logClient);
+        logClient.setEditable(false);
+        JScrollPane scrollog = new JScrollPane(logClient);
+        add(scrollog);
+
+        // Подключение к серверу
+        btnLogin.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+//                ServerWindow.log.append("User " + login + " has logged\n");// org/example/Вопросы:2
+                if (ServerWindow.isServerWorking == true) {
+                    isLogged = true;
+                    Controller.userLog(tflogin.getText());
+                } else {
+                    Controller.errorMsg();
+                }
+            }
+        });
+
+        // отправка сообщений нажатием Enter
+        tfmessage.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (ServerWindow.isServerWorking == true) {
+                    Controller.sendTxt(tfmessage.getText(), tflogin.getText());
+                } else {
+                    Controller.errorMsg();
+                }
+            }
+        });
+
+        // отправка сообщений кнопкой Send
+        btnSend.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (ServerWindow.isServerWorking == true) {
+                    Controller.sendTxt(tfmessage.getText(), tflogin.getText());
+                } else {
+                    Controller.errorMsg();
+                }
+            }
+        });
+
+        setVisible(true);
+
+    }
 }
