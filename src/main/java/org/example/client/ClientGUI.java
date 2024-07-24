@@ -2,15 +2,17 @@ package org.example.client;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class ClientGUI extends JFrame implements ClientView{
 
     private static final int WIDTH = 400;
     private static final int HEIGHT = 450;
-//    String ip;
-//    int port;
-//    String login;
-//    int password;
+    private String ip;
+    private String  port;
+    private String login;
+    private String password;
 
     private final JTextArea log = new JTextArea();
     private final JPanel topPanel = new JPanel(new GridLayout(2,3));
@@ -24,9 +26,16 @@ public class ClientGUI extends JFrame implements ClientView{
     private final JPanel panelMessage = new JPanel(new BorderLayout());
     private ClientController clientController;
 
-    public ClientGUI(String ip, String port, String login, String password){
+    public ClientGUI(String ip, String port, String login, String password,
+                     ClientController clientController){
 
-//        setDefaultCloseOperation(EXIT_ON_CLOSE);
+      this. ip = ip;
+      this.port = port;
+      this.login = login;
+      this.password = password;
+      this.clientController = clientController;
+
+//      setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(WIDTH,HEIGHT);
         setResizable(true);
         setLocationRelativeTo(null);
@@ -57,9 +66,25 @@ public class ClientGUI extends JFrame implements ClientView{
         JScrollPane scrollog = new JScrollPane(log);
         add(scrollog);
 
+        btnLogin.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                clientController.connectToServer(login);
+            }
+        });
+
+        btnSend.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                clientController.message(tfmessage.getText());
+            }
+        });
+
         setVisible(true);
 
     }
+
+
 
     /**
      * Метод изменения видимости верхней панели экрана, на которой виджеты для авторизации (например кнопка логин)
