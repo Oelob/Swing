@@ -106,10 +106,14 @@ public class ClientGUI extends JFrame implements Observer{
     }
 
 
+//    @Override
+//    public void update(String message, Observer o) {
+//        o.logClient.append(message);
+//    }
 
     @Override
-    public void update(String message) {
-        logClient.append(message);
+    public void update(String message, ClientGUI c) {
 
+        this.logClient.append(message);
     }
 }

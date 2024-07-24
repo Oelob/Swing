@@ -80,10 +80,10 @@ public class ServerWindow extends JFrame implements Observable {
     public static void sendMessage (){
 
         for (ClientGUI o : clients) {
-//            o.update(msgFromClient);
+            o.update(msgFromClient, o);
 
-            o.logClient.append(msgFromClient);
-            System.out.println(o.getLogin());
+//            o.logClient.append(msgFromClient);
+
         }
     }
 
