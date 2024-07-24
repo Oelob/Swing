@@ -1,9 +1,9 @@
-package org.example;
+package org.example.client;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class ClientGUI extends JFrame {
+public class ClientGUI extends JFrame implements ClientView{
 
     private static final int WIDTH = 400;
     private static final int HEIGHT = 450;
@@ -22,8 +22,9 @@ public class ClientGUI extends JFrame {
     private final JButton btnSend = new JButton("Send");
     private final JButton btnLogin = new JButton("Login");
     private final JPanel panelMessage = new JPanel(new BorderLayout());
+    private ClientController clientController;
 
-    ClientGUI(String ip, String port, String login, String password){
+    public ClientGUI(String ip, String port, String login, String password){
 
 //        setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(WIDTH,HEIGHT);
@@ -60,5 +61,30 @@ public class ClientGUI extends JFrame {
 
     }
 
+    /**
+     * Метод изменения видимости верхней панели экрана, на которой виджеты для авторизации (например кнопка логин)
+     * @param visible true, если надо сделать панель видимой
+     */
+    public void hideHeaderPanel(boolean visible){
+        topPanel.setVisible(visible);
+    }
 
+
+
+    @Override
+    public void showMessage(String message) {
+        log.append(message);
+    }
+
+    @Override
+    public void disconnectedFromServer() {
+        hideHeaderPanel(true);
+    }
+
+    /**
+     * Метод, описывающий отключение клиента от сервера со стороны клиента
+     */
+    public void disconnectFromServer(){
+        clientController.disconnectFromServer();
+    }
 }
