@@ -1,4 +1,4 @@
-package org.example;
+package org.example.server;
 
 import javax.swing.*;
 import javax.swing.event.CaretEvent;
