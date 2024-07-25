@@ -1,7 +1,7 @@
 package org.example;
 
+
 import org.example.client.ClientGUI;
-import org.example.server.ServerController;
 import org.example.server.ServerWindow;
 
 public class Main {
