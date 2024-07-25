@@ -1,20 +1,23 @@
-package org.example;
+package org.example.client;
+
+import org.example.server.ServerController;
+import org.example.server.ServerWindow;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class ClientGUI extends JFrame implements Observer{
+public class ClientGUI extends JFrame implements ClientView{
 
     private static final int WIDTH = 400;
     private static final int HEIGHT = 450;
-//    String ip;
-//    int port;
+    private String ip;
+    private String  port;
     private String login;
-//    int password;
+    private String password;
 
-    public static final JTextArea logClient = new JTextArea();
+    private final JTextArea log = new JTextArea();
     private final JPanel topPanel = new JPanel(new GridLayout(2,3));
     private final JTextField tflogin = new JTextField();
     private final JTextField tfIPadress = new JTextField();
@@ -24,14 +27,21 @@ public class ClientGUI extends JFrame implements Observer{
     private final JButton btnSend = new JButton("Send");
     private final JButton btnLogin = new JButton("Login");
     private final JPanel panelMessage = new JPanel(new BorderLayout());
-    public static boolean isLogged;
+    private ClientController clientController;
+    private ServerController serverController;
 
-    // коструктор с возможностью внесения параметров при создании
-    ClientGUI(String ip, String port, String login, String password, Observable o){
-        this.login = login;
-        o.registerClient(this);
 
-//        setDefaultCloseOperation(EXIT_ON_CLOSE);
+    public ClientGUI(String ip, String port, String login, String password) {
+
+        clientController = new ClientController(this);
+      this. ip = ip;
+      this.port = port;
+      this.login = login;
+      this.password = password;
+
+
+
+//      setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(WIDTH,HEIGHT);
         setResizable(true);
         setLocationRelativeTo(null);
@@ -57,63 +67,63 @@ public class ClientGUI extends JFrame implements Observer{
         add(panelMessage, BorderLayout.SOUTH);
 
         // добавление текстовой зоны
-        add(logClient);
-        logClient.setEditable(false);
-        JScrollPane scrollog = new JScrollPane(logClient);
+        add(log);
+        log.setEditable(false);
+        JScrollPane scrollog = new JScrollPane(log);
         add(scrollog);
 
-        // Подключение к серверу
         btnLogin.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                ServerWindow.log.append("User " + login + " has logged\n");// org/example/Вопросы:2
-                if (ServerWindow.isServerWorking == true) {
-                    isLogged = true;
-                    Controller.userLog(login);
-                } else {
-                    Controller.errorMsg();
-                }
+                clientController.connectToServer(login);
             }
         });
 
-        // отправка сообщений нажатием Enter
-        tfmessage.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (ServerWindow.isServerWorking == true) {
-                    Controller.sendTxt(tfmessage.getText(), login);
-
-                } else {
-                    Controller.errorMsg();
-                }
-            }
-        });
-
-        // отправка сообщений кнопкой Send
         btnSend.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (ServerWindow.isServerWorking == true) {
-                    Controller.sendTxt(tfmessage.getText(), login);
-                } else {
-                    Controller.errorMsg();
-                }
+                clientController.message(tfmessage.getText());
             }
         });
 
         setVisible(true);
 
     }
+    public void registerOnServer(ServerController serverController){
+        clientController.setServer(serverController);
+    }
 
 
-//    @Override
-//    public void update(String message, Observer o) {
-//        o.logClient.append(message);
-//    }
+
+    /**
+     * Метод изменения видимости верхней панели экрана, на которой виджеты для авторизации (например кнопка логин)
+     * @param visible true, если надо сделать панель видимой
+     */
+    public void hideHeaderPanel(boolean visible){
+        topPanel.setVisible(visible);
+    }
+
+
 
     @Override
-    public void update(String message, ClientGUI c) {
+    public void showMessage(String message) {
+        log.append(message);
+    }
 
-        this.logClient.append(message);
+    @Override
+    public void disconnectedFromServer() {
+        hideHeaderPanel(true);
+    }
+
+    @Override
+    public String infoClient() {
+        return tflogin.getText();
+    }
+
+    /**
+     * Метод, описывающий отключение клиента от сервера со стороны клиента
+     */
+    public void disconnectFromServer(){
+        clientController.disconnectFromServer();
     }
 }
