@@ -1,5 +1,8 @@
 package org.example.client;
 
+import org.example.server.ServerController;
+import org.example.server.ServerWindow;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -25,15 +28,18 @@ public class ClientGUI extends JFrame implements ClientView{
     private final JButton btnLogin = new JButton("Login");
     private final JPanel panelMessage = new JPanel(new BorderLayout());
     private ClientController clientController;
+    private ServerController serverController;
 
-    public ClientGUI(String ip, String port, String login, String password,
-                     ClientController clientController){
 
+    public ClientGUI(String ip, String port, String login, String password) {
+
+        clientController = new ClientController(this);
       this. ip = ip;
       this.port = port;
       this.login = login;
       this.password = password;
-      this.clientController = clientController;
+
+
 
 //      setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(WIDTH,HEIGHT);
@@ -83,6 +89,9 @@ public class ClientGUI extends JFrame implements ClientView{
         setVisible(true);
 
     }
+    public void registerOnServer(ServerController serverController){
+        clientController.setServer(serverController);
+    }
 
 
 
@@ -104,6 +113,11 @@ public class ClientGUI extends JFrame implements ClientView{
     @Override
     public void disconnectedFromServer() {
         hideHeaderPanel(true);
+    }
+
+    @Override
+    public String infoClient() {
+        return tflogin.getText();
     }
 
     /**

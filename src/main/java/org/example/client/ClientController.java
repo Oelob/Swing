@@ -6,22 +6,30 @@ public class ClientController {
 
     private boolean connected;
     private String name;
-    private ClientView clientView;
+    private final ClientView clientView;
     private ServerController serverController;
 
-    ClientController(ClientView clientView, ServerController serverController) {
-        this.serverController = serverController;
+    ClientController(ClientView clientView) {
+
         this.clientView = clientView;
     }
 
+    public void setServer(ServerController serverController) {
+        this.serverController = serverController;
+    }
 
-        /**
+    public ClientController getClientController(){
+        return this;
+    }
+
+    /**
          * метод подключения к серверу
          */
 
     public boolean connectToServer (String name) {
         this.name = name;
-        if (serverController.connectUser(this)) {
+
+        if (serverController.connectUser(this.clientView)) {
             showOnWindow("Вы успешно подключились!\n");
             connected = true;
             String log = serverController.getHistory();
@@ -40,9 +48,9 @@ public class ClientController {
      */
     public void disconnectedFromServer() {
         if (connected) {
-            connected = false;
             clientView.disconnectedFromServer();
             showOnWindow("Вы были отключены от сервера!");
+            connected = false;
         }
     }
 
