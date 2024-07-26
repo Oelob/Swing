@@ -1,11 +1,7 @@
 package org.example.server;
 
-import org.example.client.ClientController;
-
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.BorderLayout;
 
 public class ServerWindow extends JFrame implements ServerView {
     private static final int POS_X = 500;
@@ -18,13 +14,7 @@ public class ServerWindow extends JFrame implements ServerView {
     private final JTextArea log = new JTextArea();
     private final JPanel btnPanel = new JPanel();
 
-    private String msgStart = "Server started\n";
-    private String msgStop = "Server stoped\n";
-    private String msgServerWorking = "Server already working\n";
-    private String msgServerNotWorking = "Server isn't running\n";
-
     private final ServerController serverController;
-    private ClientController clientController;
 
     public ServerWindow(){
         this.serverController = new ServerController(this);
@@ -47,23 +37,15 @@ public class ServerWindow extends JFrame implements ServerView {
         btnPanel.add(btnStop);
         add(btnPanel, BorderLayout.SOUTH);
 
-        btnStop.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                serverController.stopServer();
-            }
-        });
+        btnStop.addActionListener(e -> serverController.stopServer());
 
-        btnStart.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                serverController.startServer();
-            }
-        });
+        btnStart.addActionListener(e -> serverController.startServer());
 
         // добавление панели с текстом
         add(log);
         log.setEditable(false);//запрет изменений зоны текста
+        JScrollPane scrollog = new JScrollPane(log);
+        add(scrollog);
 
         setVisible(true);
     }
@@ -71,6 +53,6 @@ public class ServerWindow extends JFrame implements ServerView {
 
     @Override
     public void appendLog(String text) {
-        log.append(text);
+        log.append(text + "\n");
     }
 }

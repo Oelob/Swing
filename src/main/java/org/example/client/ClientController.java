@@ -18,55 +18,33 @@ public class ClientController {
         this.serverController = serverController;
     }
 
-    public ClientController getClientController(){
-        return this;
-    }
 
     /**
-         * метод подключения к серверу
-         */
+     * метод подключения к серверу
+     */
 
-    public boolean connectToServer (String name) {
+    public void connectToServer (String name) {
         this.name = name;
 
         if (serverController.connectUser(this.clientView)) {
             showOnWindow("Вы успешно подключились!\n");
             connected = true;
-            String log = serverController.getHistory();
+            StringBuilder log = serverController.getHistory();
             if (log != null) {
-                showOnWindow(log);
+                showOnWindow(String.valueOf(log));
             }
-            return true;
         } else {
             showOnWindow("Подключение не удалось");
-            return false;
         }
     }
 
-    /**
-     * Метод отключения от сервера инициализированное сервером
-     */
-    public void disconnectedFromServer() {
-        if (connected) {
-            clientView.disconnectedFromServer();
-            showOnWindow("Вы были отключены от сервера!");
-            connected = false;
-        }
-    }
 
     /**
      * Метод отключения от сервера инициализированное клиентом (например закрыто GUI)
      */
     public void disconnectFromServer() {
-        serverController.disconnectUser((ClientView) this);
-    }
-
-    /**
-     * Метод, с помощью которого сервер передает клиенту сообщения
-     * @param text текст переданный от сервера
-     */
-    public void answerFromServer(String text) {
-        showOnWindow(text);
+        serverController.disconnectUser(clientView);
+        connected = false;
     }
 
     /**

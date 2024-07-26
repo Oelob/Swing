@@ -1,90 +1,113 @@
 package org.example.client;
 
 import org.example.server.ServerController;
-import org.example.server.ServerWindow;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 public class ClientGUI extends JFrame implements ClientView{
 
     private static final int WIDTH = 400;
     private static final int HEIGHT = 450;
-    private String ip;
-    private String  port;
-    private String login;
-    private String password;
 
-    private final JTextArea log = new JTextArea();
-    private final JPanel topPanel = new JPanel(new GridLayout(2,3));
-    private final JTextField tflogin = new JTextField();
-    private final JTextField tfIPadress = new JTextField();
-    private final JPasswordField tfPassword = new JPasswordField();
-    private final JTextField tfPort = new JTextField();
-    private final JTextField tfmessage = new JTextField();
-    private final JButton btnSend = new JButton("Send");
-    private final JButton btnLogin = new JButton("Login");
-    private final JPanel panelMessage = new JPanel(new BorderLayout());
-    private ClientController clientController;
-    private ServerController serverController;
+    private final JTextArea log;
+    private final JPanel topPanel;
+    private final JTextField tflogin;
+    private final JTextField tfmessage;
+    private final ClientController clientController;
+
 
 
     public ClientGUI(String ip, String port, String login, String password) {
 
         clientController = new ClientController(this);
-      this. ip = ip;
-      this.port = port;
-      this.login = login;
-      this.password = password;
 
 
+//      setDefaultCloseOperation();
+        addWindowListener(new WindowListener() {
+          @Override
+          public void windowOpened(WindowEvent e) {
 
-//      setDefaultCloseOperation(EXIT_ON_CLOSE);
+          }
+
+          @Override
+          public void windowClosing(WindowEvent e) {
+              disconnectFromServer();
+          }
+
+          @Override
+          public void windowClosed(WindowEvent e) {
+
+          }
+
+          @Override
+          public void windowIconified(WindowEvent e) {
+
+          }
+
+          @Override
+          public void windowDeiconified(WindowEvent e) {
+
+          }
+
+          @Override
+          public void windowActivated(WindowEvent e) {
+
+          }
+
+          @Override
+          public void windowDeactivated(WindowEvent e) {
+
+          }
+      });
         setSize(WIDTH,HEIGHT);
         setResizable(true);
         setLocationRelativeTo(null);
         setTitle("Chat client");
 
         // добавление верхней панели с текстовыми полями
+        JTextField tfIPadress = new JTextField();
         tfIPadress.setText(ip);
+        JTextField tfPort = new JTextField();
         tfPort.setText(port);
+        tflogin = new JTextField();
         tflogin.setText(login);
+        JPasswordField tfPassword = new JPasswordField();
         tfPassword.setText(password);
 
+        topPanel = new JPanel(new GridLayout(2,3));
         topPanel.add(tfIPadress);
         topPanel.add(tfPort);
         topPanel.add(tflogin);
         topPanel.add(tfPassword);
+        JButton btnLogin = new JButton("Login");
         topPanel.add(btnLogin);
         add(topPanel, BorderLayout.NORTH);
 
         // добавление нижней панели с текстовым полем и кнопкой отправки сообщения
+        tfmessage = new JTextField();
         tfmessage.setColumns(350);
+        JPanel panelMessage = new JPanel(new BorderLayout());
         panelMessage.add(tfmessage, BorderLayout.CENTER);
+        JButton btnSend = new JButton("Send");
         panelMessage.add(btnSend, BorderLayout.EAST);
         add(panelMessage, BorderLayout.SOUTH);
 
         // добавление текстовой зоны
+        log = new JTextArea();
         add(log);
         log.setEditable(false);
         JScrollPane scrollog = new JScrollPane(log);
         add(scrollog);
 
-        btnLogin.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                clientController.connectToServer(login);
-            }
-        });
 
-        btnSend.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                clientController.message(tfmessage.getText());
-            }
-        });
+        btnLogin.addActionListener(e -> clientController.connectToServer(login));
+
+        btnSend.addActionListener(e -> clientController.message(tfmessage.getText()));
+
+        tfmessage.addActionListener(e -> clientController.message(tfmessage.getText()));
 
         setVisible(true);
 
@@ -107,7 +130,7 @@ public class ClientGUI extends JFrame implements ClientView{
 
     @Override
     public void showMessage(String message) {
-        log.append(message);
+        log.append(message + "\n");
     }
 
     @Override

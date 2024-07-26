@@ -1,35 +1,29 @@
 package org.example.server;
 
-import org.example.client.ClientController;
-import org.example.client.ClientGUI;
 import org.example.client.ClientView;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class ServerController {
-    private ClientController clientController;
     private final ServerView serverView;
-    private boolean isWork;
+    private boolean isWorking;
     private final  List<ClientView> clients;
+    private Repository repository;
+
 
     ServerController(ServerView serverView){
         this.serverView = serverView;
-        this.clients = new ArrayList<>();
+        this.clients = new LinkedList<>();
+        initRepository();
     }
-
-    public void setClientController(ClientController clientController) {
-        this.clientController = clientController;
+    private void initRepository (){
+        repository = new RepositoryFile();
     }
-
-    public ServerController getServerController(){
-        return this;
-    }
-
 
     public void startServer (){
-        if (isWork == false){
-            isWork = true;
+        if (!isWorking){
+            isWorking = true;
             showMessageLogServer("Server turned on\n");
         } else {
             showMessageLogServer("Server already working\n");
@@ -38,8 +32,8 @@ public class ServerController {
 
 
     public void stopServer(){
-        if (isWork == true){
-            isWork = false;
+        if (isWorking){
+            isWorking = false;
             showMessageLogServer("Server turned off\n");
         } else {
             showMessageLogServer("Server already powered off\n");
@@ -47,53 +41,40 @@ public class ServerController {
     }
 
     public boolean connectUser(ClientView client) {
-
-        clients.add(client);
-        for (ClientView c : clients){
-            System.out.println(c.infoClient());
+        if (isWorking) {
+            clients.add(client);
+            showMessageLogServer("Clent " + client.infoClient() + " successfully connected");
+            return true;
+        } else {
+            return false;
         }
-        return true;
     }
 
-    ;
-
-    public String getHistory() {
-        return null;
+    public StringBuilder getHistory() {
+        return repository.read();
     }
-
-    ;
 
     public void disconnectUser(ClientView clientView) {
+        showMessageLogServer("Client " + clientView.infoClient() + " has logged out");
     }
 
-    ;
-
-
     public void message(String text){
-        if (!isWork){
+        if (!isWorking){
             return;
         }
         serverView.appendLog(text);
         answerAll(text);
-        saveInLog(text);
+        repository.save(text);
     }
 
     private void answerAll(String text){
-//        for (ClientGUI clientGUI: clientGUIList){
-//            clientGUI.answer(text);
-//        }
-    }
-
-    private void saveInLog(String text){
-//        try (FileWriter writer = new FileWriter(LOG_PATH, true)){
-//            writer.write(text);
-//            writer.write("\n");
-//        } catch (Exception e){
-//            e.printStackTrace();
-//        }
+            for (ClientView c : clients) {
+                c.showMessage(text);
+            }
     }
 
     private void showMessageLogServer(String text){
         serverView.appendLog(text);
     }
+
 }
